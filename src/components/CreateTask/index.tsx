@@ -1,19 +1,19 @@
 import { Stack } from '@mui/material';
+import { useFormik } from 'formik';
 import { memo } from 'react';
 import { Heading } from 'src/components';
-import { DateTime, Input, Select, Option } from 'src/components/FormControls';
+import { DateTime, Input, Option, Select } from 'src/components/FormControls';
 import { Button } from 'src/components/shared';
-import { useFormik } from 'formik';
-import { INITIAL_VALUES, validationSchema } from './helpers';
 import { PriorityType } from 'src/constant/enum';
 import { Task } from 'src/constant/type';
-import useTask from 'src/hooks/useTask';
+import { useTasks } from 'src/store/tasks/selectors';
+import { INITIAL_VALUES, validationSchema } from './helpers';
 
 const CreateTask = () => {
-    const [tasks, onGetTask, onAddTask] = useTask();
+    const { onAddTask } = useTasks();
     const onSubmit = (value: Task) => {
         onAddTask(value);
-        onGetTask(tasks);
+        onResetForm();
     };
 
     const formik = useFormik({
@@ -25,6 +25,10 @@ const CreateTask = () => {
 
     const onChangeDate = (fieldName: string, newDate: Date) => {
         formik.setFieldValue(fieldName, newDate.getTime());
+    };
+
+    const onResetForm = () => {
+        formik.resetForm();
     };
 
     return (
