@@ -1,18 +1,24 @@
 import { Stack } from '@mui/material';
+import { nanoid } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { memo } from 'react';
 import { Heading } from 'src/components';
-import { DateTime, Input, Option, Select } from 'src/components/FormControls';
+import { DateTime, Input, Select } from 'src/components/FormControls';
 import { Button } from 'src/components/shared';
+import { PIORITY_OPTIONS } from 'src/constant';
 import { PriorityType } from 'src/constant/enum';
 import { Task } from 'src/constant/type';
 import { useTasks } from 'src/store/tasks/selectors';
-import { INITIAL_VALUES, validationSchema } from './helpers';
+import { InitialValue, INITIAL_VALUES, validationSchema } from './helpers';
 
 const CreateTask = () => {
     const { onAddTask } = useTasks();
-    const onSubmit = (value: Task) => {
-        onAddTask(value);
+    const onSubmit = (value: InitialValue) => {
+        const newValue: Task = {
+            id: nanoid(),
+            ...value,
+        };
+        onAddTask(newValue);
         onResetForm();
     };
 
@@ -35,10 +41,11 @@ const CreateTask = () => {
         <Stack
             component="form"
             flex="1"
-            px={5}
+            px={{ md: 5, sm: 3, xs: 2 }}
             py={3}
             border="1px solid"
-            borderRight="0"
+            borderRight={{ md: 0, xs: 1 }}
+            borderBottom={{ md: 1, xs: 0 }}
             onSubmit={formik.handleSubmit}
         >
             <Heading>New Task</Heading>
@@ -59,7 +66,7 @@ const CreateTask = () => {
                 value={formik.values['description']}
                 error={formik.errors['description']}
             />
-            <Stack className="date-wrapper" direction="row" spacing={2} mb={5}>
+            <Stack className="date-wrapper" direction={{ sm: 'row', xs: 'column' }} spacing={2} mb={5}>
                 <DateTime
                     label="Due date"
                     name="dueDate"
@@ -82,18 +89,3 @@ const CreateTask = () => {
 };
 
 export default memo(CreateTask);
-
-const PIORITY_OPTIONS: Option[] = [
-    {
-        label: 'Low',
-        value: PriorityType.Low,
-    },
-    {
-        label: 'Normal',
-        value: PriorityType.Normal,
-    },
-    {
-        label: 'High',
-        value: PriorityType.High,
-    },
-];

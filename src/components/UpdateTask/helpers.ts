@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { PriorityType } from 'src/constant/enum';
+import { Task } from 'src/constant/type';
 
 export interface InitialValue {
     title: string;
