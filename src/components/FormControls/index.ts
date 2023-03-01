@@ -1,6 +1,6 @@
 import Input from './Input';
-import Textarea from './Textarea';
 import DateTime from './DateTime';
-import Select from './Select';
+import Select, { Option } from './Select';
 
-export { Input, Textarea, DateTime, Select };
+export { Input, DateTime, Select };
+export type { Option };

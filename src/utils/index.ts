@@ -28,3 +28,26 @@ export const getActiveBreakpoint = (currentRatio: Breakpoint, options: { [key: s
             return;
     }
 };
+
+export const formatTimestamp2LocalDate = (date?: number | string, format?: string) => {
+    if (!date) return '';
+    if (!format) format = 'yyyy-MM-dd hh:mm';
+    const dateObj = new Date(date);
+
+    const year = dateObj.getFullYear();
+
+    if (year === 1 || year === 1970) return '';
+    const day = `0${dateObj.getDate()}`.substr(-2);
+    const month = `0${dateObj.getMonth() + 1}`.substr(-2);
+    const hours = `0${dateObj.getHours()}`.substr(-2);
+    const minutes = `0${dateObj.getMinutes()}`.substr(-2);
+    const seconds = `0${dateObj.getSeconds()}`.substr(-2);
+    let dateFormat = format.replace('yyyy', year.toString());
+    dateFormat = dateFormat.replace('MM', month);
+    dateFormat = dateFormat.replace('dd', day);
+    dateFormat = dateFormat.replace('hh', hours);
+    dateFormat = dateFormat.replace('mm', minutes);
+    dateFormat = dateFormat.replace('ss', seconds);
+
+    return dateFormat;
+};

@@ -1,19 +1,23 @@
 import { Button as ButtonMUI, ButtonProps as ButtonPropsMUI } from '@mui/material';
 import { memo } from 'react';
 
-type ButtonProps = ButtonPropsMUI & {};
+type ButtonProps = Omit<ButtonPropsMUI, 'color'> & {
+    color?: string;
+};
 
 const Button = (props: ButtonProps) => {
-    const { children, ...rest } = props;
+    const { children, color, sx, ...rest } = props;
     return (
         <ButtonMUI
             {...rest}
             sx={{
                 textTransform: 'capitalize',
-                mt: 5,
-                background: 'green',
+                backgroundColor: color ?? 'secondary.main',
                 color: '#fff',
-                '&:hover': { background: 'green' },
+                '&:hover': {
+                    backgroundColor: color ?? 'secondary.main',
+                },
+                ...sx,
             }}
         >
             {children}

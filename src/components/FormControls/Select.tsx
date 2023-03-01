@@ -1,14 +1,19 @@
-import { MenuItem, Select as SelectMUI, Stack } from '@mui/material';
-import { StackProps } from '@mui/system';
+import { MenuItem, Select as SelectMUI, SelectProps as SelectPropsMUI, Stack } from '@mui/material';
 import { memo } from 'react';
 import { Text } from 'src/components/shared';
 
-type SelectProps = StackProps & {
+export type Option = {
+    label: string;
+    value: number | string;
+};
+
+type SelectProps = SelectPropsMUI & {
     label?: string;
+    options: Option[];
 };
 
 const Select = (props: SelectProps) => {
-    const { label } = props;
+    const { label, options, ...rest } = props;
     return (
         <Stack flex={1}>
             {label && (
@@ -16,10 +21,12 @@ const Select = (props: SelectProps) => {
                     {label}
                 </Text>
             )}
-            <SelectMUI labelId="demo-simple-select-label" id="demo-simple-select" label="Age" defaultValue={10}>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+            <SelectMUI labelId="demo-simple-select-label" id="demo-simple-select" label="Age" size="small" {...rest}>
+                {options.map((option, index) => (
+                    <MenuItem key={index} value={option.value}>
+                        {option.label}
+                    </MenuItem>
+                ))}
             </SelectMUI>
         </Stack>
     );
