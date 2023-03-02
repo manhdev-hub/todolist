@@ -2,9 +2,11 @@ import { Box, Checkbox, Stack } from '@mui/material';
 import React, { memo, useState } from 'react';
 import { Task } from 'src/constant/type';
 import { Button, Text } from 'src/components/shared';
-import { useTasks } from 'src/store/tasks/selectors';
+import { useTasks } from 'src/store/tasks';
 import { useToggle } from 'src/hooks';
 import { Confirm, UpdateTask } from 'src/components';
+import { useSnackbar } from 'src/store/app';
+import { DELETE_TASK_SUCCESS_MESSAGE, TASK_NOT_FOUND } from 'src/constant';
 
 type TaskItemProps = {
     item: Task;
@@ -16,6 +18,7 @@ const TaskItem = (props: TaskItemProps) => {
     const [currentItem, setCurrentItem] = useState<Task>();
     const [open, onOpen, onClose] = useToggle();
     const [openDetail, , onCloseDetail, onToggleDetail] = useToggle();
+    const { onSnackbar } = useSnackbar();
 
     const openDialog = (item: Task) => {
         setCurrentItem(item);
@@ -23,14 +26,18 @@ const TaskItem = (props: TaskItemProps) => {
     };
 
     const onRemoveTasks = () => {
-        if (!currentItem) return;
+        if (!currentItem) {
+            onSnackbar(TASK_NOT_FOUND, 'error');
+            return;
+        }
         onDeleteTask(currentItem);
+        onSnackbar(DELETE_TASK_SUCCESS_MESSAGE, 'success');
     };
 
     const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newIndex = [...tempId, item.id];
-            onSetIdTask(newIndex);
+            const newIds = [...tempId, item.id];
+            onSetIdTask(newIds);
         } else {
             const newIds = tempId.filter((id) => id !== item.id);
             onSetIdTask(newIds);
@@ -54,11 +61,15 @@ const TaskItem = (props: TaskItemProps) => {
                 py={1}
             >
                 <Stack className="title" direction="row" spacing={2} alignItems="center">
-                    <Checkbox className="checkbox" onChange={handleChecked} defaultChecked={false} />
+                    <Checkbox
+                        checked={tempId.some((id) => id === item.id)}
+                        className="checkbox"
+                        onChange={handleChecked}
+                    />
                     <Text
                         sx={{
                             mr: '15px!important',
-                            width: { lg: 140, xs: 'auto' },
+                            width: { lg: 140, sm: 'auto', xs: 80 },
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                         }}
@@ -80,7 +91,7 @@ const TaskItem = (props: TaskItemProps) => {
                     open={open}
                     handleClose={onClose}
                     handleSubmit={() => onRemoveTasks()}
-                    title="Are you sure delete this task?"
+                    title="Are you sure you want to delete this task?"
                 />
             </Box>
             <UpdateTask open={openDetail} onClose={onCloseDetail} />

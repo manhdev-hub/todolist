@@ -1,12 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
+import appReducer, { AppState } from './app/reducer';
 import tasksReducer, { TaskState } from './tasks/reducer';
 
 export interface State {
+    app: AppState;
     tasks: TaskState;
 }
 
 export const store = configureStore({
     reducer: {
+        app: appReducer,
         tasks: tasksReducer,
     },
 });

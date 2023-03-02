@@ -1,4 +1,5 @@
 import { Breakpoint } from '@mui/material';
+import { Task } from 'src/constant/type';
 import { BreakpointsOptions } from 'src/hooks';
 
 export const getActiveBreakpoint = (currentRatio: Breakpoint, options: { [key: string]: string }) => {
@@ -50,4 +51,8 @@ export const formatTimestamp2LocalDate = (date?: number | string, format?: strin
     dateFormat = dateFormat.replace('ss', seconds);
 
     return dateFormat;
+};
+
+export const sortTaskFromDate = (task: Task[]) => {
+    return task.sort((a, b) => a.dueDate - b.dueDate);
 };

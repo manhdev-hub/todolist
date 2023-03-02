@@ -5,20 +5,27 @@ import { memo } from 'react';
 import { Heading } from 'src/components';
 import { DateTime, Input, Select } from 'src/components/FormControls';
 import { Button } from 'src/components/shared';
-import { PIORITY_OPTIONS } from 'src/constant';
+import { PIORITY_OPTIONS, A_MIN_TO_MILISEC, CREATE_TASK_SUCCESS_MESSAGE, TIME_PAST_ERROR } from 'src/constant';
 import { PriorityType } from 'src/constant/enum';
 import { Task } from 'src/constant/type';
-import { useTasks } from 'src/store/tasks/selectors';
+import { useSnackbar } from 'src/store/app';
+import { useTasks } from 'src/store/tasks';
 import { InitialValue, INITIAL_VALUES, validationSchema } from './helpers';
 
 const CreateTask = () => {
     const { onAddTask } = useTasks();
+    const { onSnackbar } = useSnackbar();
     const onSubmit = (value: InitialValue) => {
+        if (value.dueDate < Date.now() - A_MIN_TO_MILISEC) {
+            formik.setFieldError('dueDate', TIME_PAST_ERROR);
+            return;
+        }
         const newValue: Task = {
             id: nanoid(),
             ...value,
         };
         onAddTask(newValue);
+        onSnackbar(CREATE_TASK_SUCCESS_MESSAGE, 'success');
         onResetForm();
     };
 

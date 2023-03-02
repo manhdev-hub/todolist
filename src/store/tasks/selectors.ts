@@ -9,7 +9,7 @@ import {
     remoteMultipleTasks,
     setTempId,
     updateTask,
-} from './action';
+} from './actions';
 
 export const useTasks = () => {
     const { tasks, task, tempId } = useAppSelector((state) => state.tasks);

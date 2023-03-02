@@ -1,5 +1,6 @@
 import { Container, Stack } from '@mui/material';
 import { CreateTask, Tasks } from 'src/components';
+import Snackbar from 'src/components/Snackbar';
 function App() {
     return (
         <Container>
@@ -7,6 +8,7 @@ function App() {
                 <CreateTask />
                 <Tasks />
             </Stack>
+            <Snackbar />
         </Container>
     );
 }

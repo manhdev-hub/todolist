@@ -1,4 +1,5 @@
 import { PriorityType } from './enum';
+import { AlertColor } from '@mui/material';
 
 export interface Task {
     id: string;
@@ -7,3 +8,8 @@ export interface Task {
     dueDate: number;
     piority: PriorityType;
 }
+
+export type Snackbar = {
+    message: string;
+    severity?: AlertColor;
+};

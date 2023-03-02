@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { PriorityType } from 'src/constant/enum';
+import { TIME_MALFORMED, TIME_PAST_ERROR, TIME_REQUIRED, TITLE_REQUITED } from 'src/constant';
 
 export interface InitialValue {
     title: string;
@@ -9,11 +10,8 @@ export interface InitialValue {
 }
 
 export const validationSchema = Yup.object().shape({
-    title: Yup.string().trim().required('Title is required.'),
-    dueDate: Yup.number()
-        .typeError('Due date is malformed!')
-        .required('Due date is required.')
-        .min(Date.now(), `Can't select time in too past`),
+    title: Yup.string().trim().required(TITLE_REQUITED),
+    dueDate: Yup.number().typeError(TIME_MALFORMED).required(TIME_REQUIRED).min(Date.now(), TIME_PAST_ERROR),
 });
 
 export const INITIAL_VALUES: InitialValue = {

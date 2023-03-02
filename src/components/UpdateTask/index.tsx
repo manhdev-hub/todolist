@@ -3,10 +3,11 @@ import { useFormik } from 'formik';
 import { memo } from 'react';
 import { DateTime, Input, Select } from 'src/components/FormControls';
 import { Button } from 'src/components/shared';
-import { PIORITY_OPTIONS } from 'src/constant';
+import { PIORITY_OPTIONS, TASK_NOT_FOUND, UPDATE_TASK_SUCCESS_MESSAGE } from 'src/constant';
 import { PriorityType } from 'src/constant/enum';
 import { Task } from 'src/constant/type';
-import { useTasks } from 'src/store/tasks/selectors';
+import { useSnackbar } from 'src/store/app';
+import { useTasks } from 'src/store/tasks';
 import { InitialValue, INITIAL_VALUES, validationSchema } from './helpers';
 
 type UpdateTaskProps = {
@@ -17,13 +18,18 @@ type UpdateTaskProps = {
 const UpdateTask = (props: UpdateTaskProps) => {
     const { open, onClose } = props;
     const { onUpdateTask, task } = useTasks();
+    const { onSnackbar } = useSnackbar();
     const onSubmit = (value: InitialValue) => {
-        if (!task || !task?.id) return;
+        onSnackbar(TASK_NOT_FOUND, 'error');
+        if (!task || !task?.id) {
+            return;
+        }
         const valueUpdated: Task = {
             id: task.id,
             ...value,
         };
         onUpdateTask(valueUpdated);
+        onSnackbar(UPDATE_TASK_SUCCESS_MESSAGE, 'success');
         onClose();
     };
 

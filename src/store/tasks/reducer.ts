@@ -9,8 +9,9 @@ import {
     remoteMultipleTasks,
     setTempId,
     updateTask,
-} from './action';
+} from './actions';
 import { KEY_LOCALSTORAGE } from 'src/constant';
+import { sortTaskFromDate } from 'src/utils';
 
 const getTasksStorage = () => {
     const tasks: Task[] | [] = localStorage.getItem(KEY_LOCALSTORAGE)
@@ -63,7 +64,7 @@ const taskSlice = createSlice({
         builder
             //get all task
             .addCase(getTasks, (state, action) => {
-                state.tasks = getTasksStorage();
+                state.tasks = sortTaskFromDate(getTasksStorage());
             })
             //get detail task
             .addCase(getTask, (state, action) => {
@@ -73,13 +74,13 @@ const taskSlice = createSlice({
             .addCase(addTask, (state, action) => {
                 const newTasks = [...current(state.tasks), action.payload];
                 addTaskStorage(action.payload);
-                state.tasks = newTasks;
+                state.tasks = sortTaskFromDate(newTasks);
             })
             //remove task
             .addCase(remoteTask, (state, action) => {
                 const newTasks = current(state.tasks).filter((task) => task !== action.payload);
                 setTaskStorage(newTasks);
-                state.tasks = newTasks;
+                state.tasks = sortTaskFromDate(newTasks);
             })
             //search task
             .addCase(searchTask, (state, action) => {
@@ -87,13 +88,14 @@ const taskSlice = createSlice({
                 const newTasks = listTask.filter((task) =>
                     task.title.toUpperCase().includes(action.payload.toUpperCase()),
                 );
-                state.tasks = newTasks;
+                state.tasks = sortTaskFromDate(newTasks);
             })
             //remove multi task
             .addCase(remoteMultipleTasks, (state, action) => {
                 const newTasks = current(state.tasks).filter((task) => action.payload.indexOf(task.id) === -1);
                 setTaskStorage(newTasks);
-                state.tasks = newTasks;
+                state.tasks = sortTaskFromDate(newTasks);
+                state.tempId = [];
             })
             //save selected ids
             .addCase(setTempId, (state, action) => {
